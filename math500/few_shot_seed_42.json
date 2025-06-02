@@ -1,0 +1,22 @@
+[
+  [
+    "Find the product of all positive integer values of $c$ such that $8x^2+15x+c=0$ has two real roots.",
+    "Let's think step by step\nFor a quadratic to have two real roots, the discriminant must be greater than 0. So we require \\begin{align*}15^2-4 \\cdot 8 \\cdot c &> 0 \\\\ \\Rightarrow \\quad 225-32c &> 0 \\\\ \\Rightarrow \\quad c&< \\frac{225}{32}.\\end{align*}The largest integer smaller than $\\frac{225}{32}$ is 7. Thus, the positive integer values of $c$ are 1, 2, 3, 4, 5, 6, and 7 and their product is $\\boxed{5040}$.\nThe answer is 5040"
+  ],
+  [
+    "At the mall's food court, Crystal wants to buy a meal consisting of one entree, one drink and one dessert. The table below lists Crystal's favorite foods in the food court. How many distinct possible meals can she buy from these options?\n\n\\begin{tabular}{ |c | c | c | }\n\\hline \\textbf{Entrees} & \\textbf{Drinks}&\\textbf{Desserts} \\\\ \\hline\nPizza & Lemonade & Frozen Yogurt \\\\ \\hline\nChicken Teriyaki & Root Beer & Chocolate Chip Cookie \\\\ \\hline\nCorn Dog& & \\\\ \\hline\nFish and Chips& & \\\\ \\hline\n\\end{tabular}",
+    "Let's think step by step\nCrystal has $4$ ways to select the entree. Once she has done that, there are $2$ drinks that can go with each entree for a total of $4\\cdot2=8$ ways to select the entree and the drink. For each of the $8$ ways of selecting the first two items, there are $2$ ways to select the dessert for a final answer of $8\\cdot2=\\boxed{16}$ ways to choose the whole meal.\nThe answer is 16"
+  ],
+  [
+    "The number of white balls and red balls in a jar is in the ratio of $3:2$. If there are 9 white balls, how many red balls are there?",
+    "Let's think step by step\nFor every 3 white balls in the jar, there are 2 red balls in the jar. Since there are 9 white balls in the jar, which is 3 groups of 3 white balls, there must be 3 groups of 2 red balls in the jar. Thus, there are $3\\times2 =\\boxed{6}$ red balls in the jar.\nThe answer is 6"
+  ],
+  [
+    "Points $A$ and $B$ are on parabola $y=4x^2+7x-1$, and the origin is the midpoint of $\\overline{AB}$. Find the square of the length of $\\overline{AB}$.",
+    "Let's think step by step\nThe graph of the parabola is shown below:\n\n[asy]\nLabel f;\n\nf.p=fontsize(6);\n\nxaxis(-2.5,.75,Ticks(f, 1.0));\n\nyaxis(-5,8,Ticks(f, 2.0));\nreal f(real x)\n\n{\n\nreturn 4x^2+7x-1;\n\n}\n\ndraw(graph(f,-2.5,.75));\ndot((.5,3.5));\ndot((-.5,-3.5));\nlabel(\"$A$\", (.5,3.5), E);\nlabel(\"$B$\", (-.5,-3.5), E);\n[/asy]\n\nLet the coordinates of point $A$ be $(x,y)$. Then since the midpoint of $\\overline{AB}$ is the origin, the coordinates of $B$ are $(-x,-y)$. Both of these points must lie on the parabola, so we plug them into the equation for the parabola to get the equations \\begin{align*}\ny&=4x^2+7x-1,\\\\\n-y&=4(-x)^2+7(-x)-1 \\Rightarrow y=-4x^2+7x+1.\n\\end{align*}Setting the two equations equal to eliminate $y$, we have $4x^2+7x-1=-4x^2+7x+1$, or $8x^2=2\\Rightarrow x^2=\\frac{1}{4}$. So $x=\\frac{1}{2}$ (the negative alternative for $x$ gives the same answer) and $y=4\\left(\\frac{1}{2}\\right)^2+7\\left(\\frac{1}{2}\\right)-1=\\frac{7}{2}$. Thus, point $A$ is at $(1/2,7/2)$ and point $B$ is at $(-1/2,-7/2)$. The length of $\\overline{AB}$ is then $\\sqrt{\\left(-\\frac{1}{2}-\\frac{1}{2}\\right)^2+\\left(-\\frac{7}{2}-\\frac{7}{2}\\right)^2}=\\sqrt{50}$. Hence, $AB^2=\\boxed{50}$.\nThe answer is 50"
+  ],
+  [
+    "We have a triangle $\\triangle ABC$ and a point $K$ on $BC$ such that $AK$ is an altitude of $\\triangle ABC$. If $AC = 10,$ $BK = 7$, and $BC = 13,$ then what is the area of $\\triangle ABC$?",
+    "Let's think step by step\nFirst, we sketch! [asy]\npair A, B, C, K;\nA = (0, 8);\nB = (-7, 0);\nC = (6, 0);\nK = (0, 0);\ndraw(A--B--C--cycle);\ndraw(A--K);\nlabel(\"$A$\", A, N);\nlabel(\"$B$\", B, SW);\nlabel(\"$C$\", C, SE);\nlabel(\"$K$\", K, NE);\nlabel(\"10\", C--A, NE);\nlabel(\"7\", B--K, N);\nlabel(\"13\", B--C, S);\ndraw(rightanglemark(A,K,B,10));\n[/asy] We now see that $CK = BC - BK = 6.$ That means $\\triangle AKC$ is a $3:4:5$ right triangle, so $AK = 8.$ At this point, we can see that the area of $\\triangle ABC$ is $\\frac{1}{2} \\cdot AK \\cdot BC = \\frac{1}{2} \\cdot 8 \\cdot 13 = \\boxed{52}.$\nThe answer is 52"
+  ]
+]

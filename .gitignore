@@ -1,0 +1,10 @@
+/misc/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+result/
+
+
+.DS_Store
