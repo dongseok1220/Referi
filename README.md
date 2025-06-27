@@ -1,5 +1,5 @@
 # Training-free LLM Verification via Recycling Few-shot Examples
-This repository provides the code for the following paper [Training-free LLM Verification via Recycling Few-shot Examples](), and provides the responses and data used in the experiment to reproduce the experiment.
+This repository provides the code for the following paper [Training-free LLM Verification via Recycling Few-shot Examples](https://arxiv.org/abs/2506.17251), and provides the responses and data used in the experiment to reproduce the experiment.
 
 
 ## Environment Setup
@@ -96,5 +96,10 @@ We adapted the original implementations from the **reference repositories** of e
 ## Citation 
 If you find this work useful for your research, please cite our papers:
 ```
-TBD
+@article{lee2025training,
+  title={Training-free LLM Verification via Recycling Few-shot Examples},
+  author={Lee, Dongseok and Hong, Jimyung and Kim, Dongyoung and Kim, Jaehyung},
+  journal={arXiv preprint arXiv:2506.17251},
+  year={2025}
+}
 ```
