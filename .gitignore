@@ -1,0 +1,44 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+
+# Generated outputs
+result/
+test_time_result/
+forward/
+backward/
+logs/
+*.ipynb
+
+# Local / exploratory work
+misc/
+
+# Keep only ReFeri-related scripts
+scripts/evaluate_baselines.py
+scripts/summarize_methods.py
+
+# Keep only the main pipeline script; ignore batch helpers
+sh/
+
+# Ignore baseline code
+baselines/*
+
+# Keep only the main experiment datasets
+data/*
+!data/drop/
+!data/drop/**
+!data/gpqa/
+!data/gpqa/**
+!data/hotpotqa/
+!data/hotpotqa/**
+!data/math500/
+!data/math500/**
+!data/musr/
+!data/musr/**
+
+# Ignore non-main embedding caches/results
+embedding_oneshot/__pycache__/
+embedding_oneshot/sim/bbh/
+embedding_oneshot/sim/bbeh_mini/
