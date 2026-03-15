@@ -169,7 +169,7 @@ resolve_style() {
     return
   fi
   shopt -s nocasematch
-  if [[ "$MODEL" == *llama* || "$MODEL_NAME" == *llama* ]]; then
+  if [[ "$MODEL" == *llama* ]]; then
     printf 'llama\n'
   else
     printf 'gpt\n'
