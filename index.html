@@ -241,6 +241,21 @@
       margin-top: 14px;
     }
 
+    /* Column widths follow each figure's aspect ratio (1200×481, 1200×594) so both render at the same height. */
+    @media (min-width: 721px) {
+      .analysis-grid.matched {
+        grid-template-columns: minmax(0, 2.4948fr) minmax(0, 2.0202fr);
+        align-items: stretch;
+      }
+
+      .analysis-grid.matched .analysis-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .analysis-grid.matched .figure-link { margin-top: auto; }
+    }
+
     .paper-lead {
       margin: 18px 0 10px;
     }
@@ -683,7 +698,7 @@
     <h2>Robustness and Efficiency</h2>
     <hr>
 
-    <div class="analysis-grid">
+    <div class="analysis-grid matched">
       <div class="analysis-item">
         <p class="paper-lead">
           <strong>ReFeri remains effective across estimation models.</strong>
