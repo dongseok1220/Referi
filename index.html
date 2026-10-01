@@ -207,20 +207,6 @@
       width: min(100%, 760px);
     }
 
-    .caption {
-      max-width: 900px;
-      margin: 8px auto 0;
-      color: #666;
-      font-size: 15px;
-      line-height: 1.35;
-      text-align: center;
-    }
-
-    .caption strong {
-      color: #4b4f53;
-      font-weight: 600;
-    }
-
     .news-row { margin: 7px 0; }
     .news-row i { width: 22px; color: var(--accent); }
 
@@ -234,70 +220,12 @@
       font-weight: 400;
     }
 
-    .key-points {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 22px 0 10px;
-    }
-
-    .key-point {
-      padding: 16px 17px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      background: #fff;
-    }
-
-    .key-point strong {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--accent);
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .key-point span {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.35;
-    }
-
-    .result-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 20px 0 25px;
-    }
-
-    .result-card {
-      padding: 15px 12px;
-      border-radius: 9px;
-      background: var(--soft);
-      text-align: center;
-    }
-
-    .result-card .number {
-      display: block;
-      color: var(--accent);
-      font-size: 27px;
-      font-weight: 700;
-      line-height: 1.1;
-    }
-
-    .result-card .label {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.3;
-    }
-
     .analysis-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 22px;
+      gap: 28px;
       align-items: start;
-      margin-top: 19px;
+      margin: 16px 0 26px;
     }
 
     .analysis-item {
@@ -308,12 +236,23 @@
       margin-top: 0;
     }
 
-    .takeaway-list {
-      margin: 11px 0 0;
-      padding-left: 22px;
+    .paper-lead {
+      margin: 18px 0 10px;
     }
 
-    .takeaway-list li { margin: 7px 0; }
+    .paper-lead strong {
+      font-weight: 700;
+    }
+
+    .figure-block {
+      margin: 14px 0 30px;
+    }
+
+    .figure-block.narrow {
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     .small-note {
       color: var(--muted);
@@ -344,8 +283,6 @@
       h1 { margin-top: 30px; }
       .authors { font-size: 17px; }
       .paper-actions { gap: 18px; font-size: 18px; }
-      .key-points,
-      .result-strip,
       .analysis-grid { grid-template-columns: 1fr; }
       .analysis-grid { gap: 30px; }
     }
@@ -399,12 +336,6 @@
     <a class="figure-link" href="assets/figure1.png" target="_blank">
       <img class="figure" src="assets/figure1.png" alt="Figure 1: Overview of ReFeri">
     </a>
-    <div class="caption">
-      <strong>Figure 1.</strong>
-      ReFeri evaluates each candidate using a forward confidence score and a backward reconstruction penalty.
-      The forward term rewards following the demonstrations, while the backward term penalizes
-      demonstration-specific artifacts that can mislead likelihood-based selection.
-    </div>
   </header>
 
   <section id="news">
@@ -418,137 +349,118 @@
     <h2>Overview</h2>
     <hr>
 
-    <p>
-      LLMs can generate multiple plausible reasoning paths for the same query, making reliable response selection
-      an important part of test-time scaling. Majority voting is limited to answers that can be normalized and
-      aggregated, while learned verifiers require additional labeled data and training.
+    <p class="paper-lead">
+      <strong>Response selection is a central bottleneck in test-time scaling.</strong>
+      LLMs can generate multiple plausible reasoning paths for the same query, but majority voting is limited
+      to outputs that can be normalized and aggregated, while learned verifiers require additional supervision
+      and training.
     </p>
 
     <blockquote>
       <b>ReFeri recycles the few-shot examples already available in the prompt as a training-free verifier.</b>
-      The same demonstrations used to guide generation are reused to evaluate which candidate best follows
-      the intended task while avoiding demonstration-specific shortcuts.
+      The same demonstrations used to guide generation are reused to evaluate which candidate follows the
+      intended task while avoiding demonstration-specific shortcuts.
     </blockquote>
 
-    <p>
-      ReFeri is motivated by a Bayes-inspired decomposition of candidate likelihood into two complementary terms.
-      A <i>forward confidence</i> score measures how well a candidate follows the given few-shot guidance.
-      A <i>backward reconstruction penalty</i> measures how strongly the candidate helps reconstruct the
-      demonstrations, which can expose excessive dependence on demonstration-specific patterns.
+    <p class="paper-lead">
+      <strong>ReFeri combines two complementary likelihood signals.</strong>
+      The forward confidence score measures how well a candidate follows the few-shot guidance, while the
+      backward reconstruction penalty identifies candidates that are overly specific to the demonstrations.
+      Their difference provides a lightweight verification signal without task-specific verifier training.
     </p>
-
-    <div class="key-points">
-      <div class="key-point">
-        <strong>Training-free</strong>
-        <span>No task-specific reward model or verifier training is required.</span>
-      </div>
-      <div class="key-point">
-        <strong>Few-shot recycling</strong>
-        <span>Demonstrations are used twice: first for generation, then again for verification.</span>
-      </div>
-      <div class="key-point">
-        <strong>Test-time scaling</strong>
-        <span>The selector remains effective as the candidate pool grows.</span>
-      </div>
-    </div>
   </section>
 
   <section id="main-results">
-    <h2>Main Results</h2>
+    <h2>Results</h2>
     <hr>
 
-    <p>
-      Across three generation LLMs and seven reasoning benchmarks, ReFeri consistently improves training-free
-      response selection. Relative to Few-shot CoT with random candidate selection, the paper reports an
-      <b>8.2% average relative gain</b>; compared with the strongest prior training-free baseline,
-      the average relative improvement is <b>2.6%</b>.
+    <p class="paper-lead">
+      <strong>ReFeri consistently improves training-free response selection.</strong>
+      Across three generation LLMs and seven reasoning benchmarks, ReFeri achieves an
+      <b>8.2% average relative gain</b> over random selection and a <b>2.6% average relative improvement</b>
+      over the strongest prior training-free baseline.
     </p>
 
-    <div class="result-strip">
-      <div class="result-card">
-        <span class="number">3</span>
-        <span class="label">generation LLMs</span>
-      </div>
-      <div class="result-card">
-        <span class="number">7</span>
-        <span class="label">reasoning benchmarks</span>
-      </div>
-      <div class="result-card">
-        <span class="number">8.2%</span>
-        <span class="label">avg. relative gain over random selection</span>
-      </div>
+    <div class="figure-block">
+      <a class="figure-link" href="assets/table1.png" target="_blank">
+        <img class="figure" src="assets/table1.png" loading="lazy" alt="Main results across three generation LLMs and seven reasoning benchmarks">
+      </a>
     </div>
 
-    <a class="figure-link" href="assets/table1.png" target="_blank">
-      <img class="figure" src="assets/table1.png" loading="lazy" alt="Table 1: Main results">
-    </a>
-
-    <p class="small-note">
-      Click the table to open the full-resolution version. ReFeri also remains competitive with a
-      lightweight 1B likelihood estimator, indicating that the gains do not simply come from estimator capacity.
-    </p>
-  </section>
-
-  <section id="scaling">
-    <h2>Test-time Scaling</h2>
-    <hr>
-
-    <p>
-      ReFeri scales reliably as the number of candidate responses increases.
-      With GPT-4o-mini generation, accuracy increases from <b>75.8 → 79.4</b> on MATH500,
-      <b>41.4 → 45.5</b> on GPQA, and <b>75.6 → 86.0</b> on MuSR-ta when increasing the candidate
-      pool from one to twenty responses.
+    <p class="paper-lead">
+      <strong>ReFeri scales with the candidate pool.</strong>
+      As the number of responses increases from 1 to 20, accuracy improves from
+      <b>75.8 to 79.4</b> on MATH500, <b>41.4 to 45.5</b> on GPQA, and
+      <b>75.6 to 86.0</b> on MuSR-ta, while several competing training-free selectors saturate or degrade.
     </p>
 
-    <a class="figure-link" href="assets/figure2.png" target="_blank">
-      <img class="figure" src="assets/figure2.png" loading="lazy" alt="Figure 2: Test-time scaling">
-    </a>
-    <div class="caption">
-      <strong>Figure 2.</strong>
-      Accuracy as the candidate pool grows. ReFeri continues to select higher-quality responses,
-      while several other training-free selectors saturate or degrade.
+    <div class="figure-block">
+      <a class="figure-link" href="assets/figure2.png" target="_blank">
+        <img class="figure" src="assets/figure2.png" loading="lazy" alt="Test-time scaling across MATH500, GPQA, and MuSR-ta">
+      </a>
     </div>
   </section>
 
   <section id="analysis">
-    <h2>What Does the Backward Term Capture?</h2>
+    <h2>Analysis</h2>
     <hr>
 
-    <p>
-      The backward term is not intended as a standalone correctness measure. Instead, it is interpreted jointly
-      with the forward score. The analyses below show that a large backward term is particularly sensitive to
-      candidates that reconstruct or mimic demonstration-specific structure.
+    <p class="paper-lead">
+      <strong>The backward term captures demonstration-specific dependence.</strong>
+      Candidates with larger raw backward scores reconstruct the original few-shot answers more accurately,
+      showing that this term measures a signal different from ordinary forward confidence rather than acting
+      as a standalone correctness score.
     </p>
 
-    <div class="analysis-grid">
-      <div class="analysis-item">
-        <a class="figure-link" href="assets/figure3.png" target="_blank">
-          <img class="figure" src="assets/figure3.png" loading="lazy" alt="Figure 3: What the backward term captures">
-        </a>
-        <div class="caption">
-          <strong>Figure 3.</strong>
-          Candidates with larger raw backward terms are better at reconstructing the original few-shot answers,
-          consistent with the demonstration-dependence that ReFeri is designed to suppress.
-        </div>
-      </div>
-
-      <div class="analysis-item">
-        <a class="figure-link" href="assets/figure4.png" target="_blank">
-          <img class="figure" src="assets/figure4.png" loading="lazy" alt="Figure 4: Perturbation with demonstration fragments">
-        </a>
-        <div class="caption">
-          <strong>Figure 4.</strong>
-          Prepending demonstration fragments increases the backward term much more sharply than the forward score,
-          directly testing its sensitivity to demonstration artifacts.
-        </div>
-      </div>
+    <div class="figure-block narrow">
+      <a class="figure-link" href="assets/figure3.png" target="_blank">
+        <img class="figure" src="assets/figure3.png" loading="lazy" alt="What the backward term captures">
+      </a>
     </div>
 
-    <ul class="takeaway-list">
-      <li>The backward term provides a signal that is complementary to ordinary forward likelihood.</li>
-      <li>Subtracting it helps avoid selecting candidates that receive high scores by copying demonstration-specific structure.</li>
-      <li>The effect is asymmetric: the penalty is most useful when the incorrect candidate is more demonstration-similar.</li>
-    </ul>
+    <p class="paper-lead">
+      <strong>Perturbing candidates with demonstration fragments exposes the same behavior.</strong>
+      Prepending retrieved demonstration fragments raises the backward score more sharply than the forward score.
+      In the artifact-injection experiment, Forward selection drops from <b>45.3% to 33.3%</b>, whereas
+      ReFeri reaches <b>47.5%</b>. The correction is most useful when an incorrect candidate is more similar
+      to the retrieved demonstration.
+    </p>
+
+    <div class="figure-block narrow">
+      <a class="figure-link" href="assets/figure4.png" target="_blank">
+        <img class="figure" src="assets/figure4.png" loading="lazy" alt="Perturbation with demonstration fragments">
+      </a>
+    </div>
+  </section>
+
+  <section id="robustness-efficiency">
+    <h2>Robustness and Efficiency</h2>
+    <hr>
+
+    <p class="paper-lead">
+      <strong>ReFeri remains effective across estimation models.</strong>
+      Holding the candidate pools fixed, ReFeri improves over Few-shot CoT with every tested estimator,
+      from LLaMA-3.2-1B-Instruct to LLaMA-3.1-70B-Instruct, while the best estimator varies by task.
+    </p>
+
+    <div class="figure-block narrow">
+      <a class="figure-link" href="assets/figure5.png" target="_blank">
+        <img class="figure" src="assets/figure5.png" loading="lazy" alt="Performance across estimation models">
+      </a>
+    </div>
+
+    <p class="paper-lead">
+      <strong>A lightweight estimator provides a favorable cost-accuracy trade-off.</strong>
+      ReFeri with a 1B estimator stays on a strong trade-off frontier and runs approximately
+      <b>2.6× faster</b> than CoT-WP with an 8B estimator, showing that the gains do not require a large
+      verification model.
+    </p>
+
+    <div class="figure-block narrow">
+      <a class="figure-link" href="assets/figure6.png" target="_blank">
+        <img class="figure" src="assets/figure6.png" loading="lazy" alt="Cost-accuracy trade-off">
+      </a>
+    </div>
   </section>
 
   <section id="citation">
