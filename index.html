@@ -19,12 +19,12 @@
 
   <style>
     :root {
-      --accent: #1d6f5f;
-      --accent-dark: #145346;
+      --accent: #003876;
+      --accent-dark: #002554;
       --ink: #25282b;
       --muted: #656a70;
       --line: #dedede;
-      --soft: #f4f7f6;
+      --soft: #f4f7fb;
       --max-width: 980px;
     }
 
@@ -222,18 +222,22 @@
 
     .analysis-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px;
       align-items: start;
-      margin: 16px 0 26px;
+      margin: 18px 0 10px;
     }
 
     .analysis-item {
       min-width: 0;
     }
 
-    .analysis-item .figure {
+    .analysis-item .paper-lead {
       margin-top: 0;
+    }
+
+    .analysis-item .figure {
+      margin-top: 14px;
     }
 
     .paper-lead {
@@ -246,12 +250,6 @@
 
     .figure-block {
       margin: 14px 0 30px;
-    }
-
-    .figure-block.narrow {
-      max-width: 820px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     .small-note {
@@ -283,8 +281,10 @@
       h1 { margin-top: 30px; }
       .authors { font-size: 17px; }
       .paper-actions { gap: 18px; font-size: 18px; }
-      .analysis-grid { grid-template-columns: 1fr; }
-      .analysis-grid { gap: 30px; }
+      .analysis-grid {
+        grid-template-columns: 1fr;
+        gap: 34px;
+      }
     }
   </style>
 </head>
@@ -405,31 +405,29 @@
     <h2>Analysis</h2>
     <hr>
 
-    <p class="paper-lead">
-      <strong>The backward term captures demonstration-specific dependence.</strong>
-      Candidates with larger raw backward scores reconstruct the original few-shot answers more accurately,
-      showing that this term measures a signal different from ordinary forward confidence rather than acting
-      as a standalone correctness score.
-    </p>
+    <div class="analysis-grid">
+      <div class="analysis-item">
+        <p class="paper-lead">
+          <strong>The backward term captures demonstration-specific dependence.</strong>
+          Candidates with larger raw backward scores reconstruct the original few-shot answers more accurately,
+          showing that the backward term provides a signal distinct from ordinary forward confidence.
+        </p>
+        <a class="figure-link" href="assets/figure3.png" target="_blank">
+          <img class="figure" src="assets/figure3.png" loading="lazy" alt="What the backward term captures">
+        </a>
+      </div>
 
-    <div class="figure-block narrow">
-      <a class="figure-link" href="assets/figure3.png" target="_blank">
-        <img class="figure" src="assets/figure3.png" loading="lazy" alt="What the backward term captures">
-      </a>
-    </div>
-
-    <p class="paper-lead">
-      <strong>Perturbing candidates with demonstration fragments exposes the same behavior.</strong>
-      Prepending retrieved demonstration fragments raises the backward score more sharply than the forward score.
-      In the artifact-injection experiment, Forward selection drops from <b>45.3% to 33.3%</b>, whereas
-      ReFeri reaches <b>47.5%</b>. The correction is most useful when an incorrect candidate is more similar
-      to the retrieved demonstration.
-    </p>
-
-    <div class="figure-block narrow">
-      <a class="figure-link" href="assets/figure4.png" target="_blank">
-        <img class="figure" src="assets/figure4.png" loading="lazy" alt="Perturbation with demonstration fragments">
-      </a>
+      <div class="analysis-item">
+        <p class="paper-lead">
+          <strong>Perturbing candidates with demonstration fragments exposes the same behavior.</strong>
+          Forward selection drops from <b>45.3% to 33.3%</b> under artifact injection, while
+          ReFeri reaches <b>47.5%</b>, indicating that the backward correction suppresses misleading
+          demonstration similarity.
+        </p>
+        <a class="figure-link" href="assets/figure4.png" target="_blank">
+          <img class="figure" src="assets/figure4.png" loading="lazy" alt="Perturbation with demonstration fragments">
+        </a>
+      </div>
     </div>
   </section>
 
@@ -437,29 +435,28 @@
     <h2>Robustness and Efficiency</h2>
     <hr>
 
-    <p class="paper-lead">
-      <strong>ReFeri remains effective across estimation models.</strong>
-      Holding the candidate pools fixed, ReFeri improves over Few-shot CoT with every tested estimator,
-      from LLaMA-3.2-1B-Instruct to LLaMA-3.1-70B-Instruct, while the best estimator varies by task.
-    </p>
+    <div class="analysis-grid">
+      <div class="analysis-item">
+        <p class="paper-lead">
+          <strong>ReFeri remains effective across estimation models.</strong>
+          Holding candidate pools fixed, ReFeri improves over Few-shot CoT with every tested estimator,
+          from LLaMA-3.2-1B-Instruct to LLaMA-3.1-70B-Instruct.
+        </p>
+        <a class="figure-link" href="assets/figure5.png" target="_blank">
+          <img class="figure" src="assets/figure5.png" loading="lazy" alt="Performance across estimation models">
+        </a>
+      </div>
 
-    <div class="figure-block narrow">
-      <a class="figure-link" href="assets/figure5.png" target="_blank">
-        <img class="figure" src="assets/figure5.png" loading="lazy" alt="Performance across estimation models">
-      </a>
-    </div>
-
-    <p class="paper-lead">
-      <strong>A lightweight estimator provides a favorable cost-accuracy trade-off.</strong>
-      ReFeri with a 1B estimator stays on a strong trade-off frontier and runs approximately
-      <b>2.6× faster</b> than CoT-WP with an 8B estimator, showing that the gains do not require a large
-      verification model.
-    </p>
-
-    <div class="figure-block narrow">
-      <a class="figure-link" href="assets/figure6.png" target="_blank">
-        <img class="figure" src="assets/figure6.png" loading="lazy" alt="Cost-accuracy trade-off">
-      </a>
+      <div class="analysis-item">
+        <p class="paper-lead">
+          <strong>A lightweight estimator provides a favorable cost-accuracy trade-off.</strong>
+          ReFeri with a 1B estimator remains on a strong trade-off frontier and runs approximately
+          <b>2.6× faster</b> than CoT-WP with an 8B estimator.
+        </p>
+        <a class="figure-link" href="assets/figure6.png" target="_blank">
+          <img class="figure" src="assets/figure6.png" loading="lazy" alt="Cost-accuracy trade-off">
+        </a>
+      </div>
     </div>
   </section>
 
