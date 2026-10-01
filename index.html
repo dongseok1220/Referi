@@ -8,7 +8,8 @@
   <meta property="og:title" content="ReFeri: Training-free LLM Verification via Recycling Few-shot Examples">
   <meta property="og:description" content="A training-free LLM verifier that recycles few-shot examples for response selection.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/figure1.png">
+  <meta property="og:url" content="https://dongseok1220.github.io/Referi/">
+  <meta property="og:image" content="https://dongseok1220.github.io/Referi/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>ReFeri — Training-free LLM Verification</title>
 
@@ -257,6 +258,129 @@
       font-size: 14px;
     }
 
+    .subfigures {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 14px 0 0;
+    }
+
+    .subfigures.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+
+    .subfigure {
+      min-width: 0;
+      margin: 0;
+      text-align: center;
+    }
+
+    .subfigure .figure { margin-top: 0; }
+
+    .subfigure figcaption {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    .figure-caption {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .table-wrap {
+      margin-top: 14px;
+      overflow-x: auto;
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table-wrap.narrow {
+      width: min(100%, 640px);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .results {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+      font-weight: 400;
+      line-height: 1.3;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .results.main { min-width: 900px; }
+
+    .results th,
+    .results td {
+      padding: 5px 8px;
+      text-align: center;
+      white-space: nowrap;
+      background: #fff;
+    }
+
+    .results thead th {
+      border-bottom: 1px solid var(--ink);
+      font-weight: 600;
+      vertical-align: bottom;
+    }
+
+    .results thead small {
+      display: block;
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 400;
+    }
+
+    .results th[scope="row"],
+    .results thead th:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      text-align: left;
+    }
+
+    .results th[scope="row"] { font-weight: 400; }
+
+    .results .group th {
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+      color: var(--accent);
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .results tbody:first-of-type .group th { border-top: 0; }
+
+    .results .group span {
+      position: sticky;
+      left: 8px;
+    }
+
+    .results .ours th,
+    .results .ours td { background: var(--soft); }
+
+    .results .avg { border-left: 1px solid var(--line); }
+
+    .results .sd {
+      color: var(--muted);
+      font-size: 0.72em;
+    }
+
+    .results b { font-weight: 700; }
+
+    .results u {
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
     pre {
       margin: 8px 0 0;
       padding: 16px;
@@ -285,6 +409,12 @@
         grid-template-columns: 1fr;
         gap: 34px;
       }
+      .subfigures { grid-template-columns: 1fr; }
+      .subfigures.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 520px) {
+      .subfigures.two { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -333,8 +463,8 @@
       </a>
     </div>
 
-    <a class="figure-link" href="assets/figure1.png" target="_blank">
-      <img class="figure" src="assets/figure1.png" alt="Figure 1: Overview of ReFeri">
+    <a class="figure-link" href="assets/fig1-overview.webp" target="_blank">
+      <img class="figure" src="assets/fig1-overview.webp" width="1888" height="602" alt="Overview of ReFeri: candidates are scored with a forward confidence score minus a backward reconstruction penalty">
     </a>
   </header>
 
@@ -382,9 +512,60 @@
     </p>
 
     <div class="figure-block">
-      <a class="figure-link" href="assets/table1.png" target="_blank">
-        <img class="figure" src="assets/table1.png" loading="lazy" alt="Main results across three generation LLMs and seven reasoning benchmarks">
-      </a>
+      <div class="table-wrap">
+        <table class="results main">
+          <thead>
+            <tr>
+              <th scope="col">Methods</th>
+              <th scope="col">MuSR-ta<small>Acc.</small></th>
+              <th scope="col">MuSR-op<small>Acc.</small></th>
+              <th scope="col">GPQA<small>Acc.</small></th>
+              <th scope="col">MATH500<small>Acc.</small></th>
+              <th scope="col">DROP<small>EM / F1</small></th>
+              <th scope="col">HotpotQA<small>EM / F1</small></th>
+              <th scope="col">MMLU-PRO<small>Acc.</small></th>
+              <th scope="col" class="avg">Avg.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group"><th colspan="9" scope="rowgroup"><span>GPT-4o</span></th></tr>
+            <tr><th scope="row">Zero-shot CoT</th><td>67.5 <span class="sd">±0.8</span></td><td>62.1 <span class="sd">±0.4</span></td><td>49.5 <span class="sd">±0.8</span></td><td>77.1 <span class="sd">±0.6</span></td><td>74.2 <span class="sd">±0.8</span> / 84.9 <span class="sd">±0.4</span></td><td>37.8 <span class="sd">±0.3</span> / 50.3 <span class="sd">±0.4</span></td><td>74.0 <span class="sd">±0.2</span></td><td class="avg">63.2 <span class="sd">±0.2</span></td></tr>
+            <tr><th scope="row">Few-shot CoT</th><td>87.2 <span class="sd">±0.6</span></td><td>69.6 <span class="sd">±0.6</span></td><td>47.3 <span class="sd">±1.7</span></td><td>75.5 <span class="sd">±0.1</span></td><td>80.4 <span class="sd">±0.2</span> / 89.0 <span class="sd">±0.2</span></td><td>44.9 <span class="sd">±0.4</span> / 58.6 <span class="sd">±0.3</span></td><td>73.7 <span class="sd">±0.2</span></td><td class="avg">68.4 <span class="sd">±0.3</span></td></tr>
+            <tr><th scope="row">LEAP</th><td>88.1 <span class="sd">±1.6</span></td><td>68.0 <span class="sd">±1.2</span></td><td>47.8 <span class="sd">±2.8</span></td><td>75.2 <span class="sd">±0.4</span></td><td>81.0 <span class="sd">±0.5</span> / 89.4 <span class="sd">±0.4</span></td><td>44.5 <span class="sd">±0.6</span> / 57.8 <span class="sd">±0.5</span></td><td>73.9 <span class="sd">±0.2</span></td><td class="avg">68.4 <span class="sd">±0.4</span></td></tr>
+            <tr><th scope="row">USC</th><td>85.9 <span class="sd">±1.9</span></td><td>71.5 <span class="sd">±0.7</span></td><td>48.2 <span class="sd">±1.6</span></td><td>77.3 <span class="sd">±0.3</span></td><td>81.8 <span class="sd">±0.3</span> / 90.2 <span class="sd">±0.1</span></td><td>45.9 <span class="sd">±0.3</span> / 60.2 <span class="sd">±0.5</span></td><td>74.9 <span class="sd">±0.5</span></td><td class="avg">69.4 <span class="sd">±0.5</span></td></tr>
+            <tr><th scope="row">CoT-WP</th><td>88.3 <span class="sd">±0.2</span></td><td>67.5 <span class="sd">±1.4</span></td><td>49.5 <span class="sd">±1.8</span></td><td>78.1 <span class="sd">±0.6</span></td><td><u>83.3 <span class="sd">±0.1</span></u> / 90.5 <span class="sd">±0.8</span></td><td>46.3 <span class="sd">±0.9</span> / 59.6 <span class="sd">±0.9</span></td><td>74.4 <span class="sd">±0.3</span></td><td class="avg">69.6 <span class="sd">±0.0</span></td></tr>
+            <tr><th scope="row">Self-Certainty</th><td>88.9 <span class="sd">±0.5</span></td><td>71.1 <span class="sd">±2.1</span></td><td>50.2 <span class="sd">±0.8</span></td><td>77.7 <span class="sd">±0.4</span></td><td>81.1 <span class="sd">±0.8</span> / 89.4 <span class="sd">±0.3</span></td><td>43.9 <span class="sd">±0.4</span> / 57.7 <span class="sd">±0.1</span></td><td>74.6 <span class="sd">±0.4</span></td><td class="avg">69.6 <span class="sd">±0.4</span></td></tr>
+            <tr class="ours"><th scope="row">ReFeri</th><td><b>90.8 <span class="sd">±0.4</span></b></td><td><u>73.7 <span class="sd">±2.2</span></u></td><td><b>51.8 <span class="sd">±0.3</span></b></td><td><b>78.5 <span class="sd">±0.6</span></b></td><td><b>83.6 <span class="sd">±0.2</span> / 90.9 <span class="sd">±0.6</span></b></td><td><b>46.9 <span class="sd">±0.4</span> / 61.0 <span class="sd">±0.7</span></b></td><td><b>75.4 <span class="sd">±0.3</span></b></td><td class="avg"><b>71.5 <span class="sd">±0.4</span></b></td></tr>
+            <tr class="ours"><th scope="row">ReFeri<sub>1B</sub></th><td><u>90.7 <span class="sd">±0.2</span></u></td><td><b>74.1 <span class="sd">±3.8</span></b></td><td><u>51.0 <span class="sd">±1.3</span></u></td><td><u>78.3 <span class="sd">±0.6</span></u></td><td><u>83.3 <span class="sd">±0.5</span></u> / <u>90.7 <span class="sd">±0.1</span></u></td><td><u>46.5 <span class="sd">±0.8</span> / 60.5 <span class="sd">±0.2</span></u></td><td><u>75.1 <span class="sd">±0.1</span></u></td><td class="avg"><u>71.3 <span class="sd">±0.4</span></u></td></tr>
+          </tbody>
+          <tbody>
+            <tr class="group"><th colspan="9" scope="rowgroup"><span>GPT-4o-mini</span></th></tr>
+            <tr><th scope="row">Zero-shot CoT</th><td>57.6 <span class="sd">±1.3</span></td><td>58.9 <span class="sd">±2.7</span></td><td>41.8 <span class="sd">±1.0</span></td><td>75.8 <span class="sd">±0.6</span></td><td>77.2 <span class="sd">±0.7</span> / <b>85.1 <span class="sd">±0.8</span></b></td><td>31.5 <span class="sd">±0.4</span> / 41.6 <span class="sd">±0.4</span></td><td>63.0 <span class="sd">±0.1</span></td><td class="avg">58.0 <span class="sd">±0.1</span></td></tr>
+            <tr><th scope="row">Few-shot CoT</th><td>77.5 <span class="sd">±0.5</span></td><td>60.3 <span class="sd">±0.8</span></td><td>42.4 <span class="sd">±1.1</span></td><td>74.7 <span class="sd">±0.7</span></td><td>76.5 <span class="sd">±0.2</span> / 82.9 <span class="sd">±0.2</span></td><td>33.6 <span class="sd">±0.3</span> / 44.9 <span class="sd">±0.2</span></td><td>63.0 <span class="sd">±0.2</span></td><td class="avg">61.1 <span class="sd">±0.2</span></td></tr>
+            <tr><th scope="row">LEAP</th><td>74.9 <span class="sd">±3.2</span></td><td>60.3 <span class="sd">±3.2</span></td><td>43.6 <span class="sd">±0.3</span></td><td>74.5 <span class="sd">±0.1</span></td><td>75.4 <span class="sd">±0.4</span> / 82.5 <span class="sd">±0.5</span></td><td>33.3 <span class="sd">±0.6</span> / 44.5 <span class="sd">±0.5</span></td><td>63.1 <span class="sd">±0.2</span></td><td class="avg">60.7 <span class="sd">±0.1</span></td></tr>
+            <tr><th scope="row">USC</th><td>76.5 <span class="sd">±2.5</span></td><td>60.5 <span class="sd">±1.0</span></td><td><u>44.6 <span class="sd">±1.2</span></u></td><td>76.4 <span class="sd">±1.2</span></td><td><u>78.8 <span class="sd">±1.7</span></u> / <u>85.0 <span class="sd">±1.0</span></u></td><td><u>35.1 <span class="sd">±0.2</span></u> / <u>47.0 <span class="sd">±0.3</span></u></td><td>64.2 <span class="sd">±0.5</span></td><td class="avg">62.3 <span class="sd">±0.5</span></td></tr>
+            <tr><th scope="row">CoT-WP</th><td>79.3 <span class="sd">±1.3</span></td><td>58.5 <span class="sd">±2.6</span></td><td>41.9 <span class="sd">±0.9</span></td><td>77.0 <span class="sd">±0.7</span></td><td>76.9 <span class="sd">±0.6</span> / 82.7 <span class="sd">±0.6</span></td><td>34.7 <span class="sd">±0.9</span> / 45.9 <span class="sd">±0.9</span></td><td><u>64.6 <span class="sd">±0.4</span></u></td><td class="avg">61.8 <span class="sd">±0.5</span></td></tr>
+            <tr><th scope="row">Self-Certainty</th><td>81.7 <span class="sd">±1.6</span></td><td>60.1 <span class="sd">±0.6</span></td><td>41.6 <span class="sd">±2.8</span></td><td>76.8 <span class="sd">±1.0</span></td><td>76.7 <span class="sd">±0.4</span> / 83.1 <span class="sd">±0.6</span></td><td>34.7 <span class="sd">±0.1</span> / 45.9 <span class="sd">±0.4</span></td><td>63.9 <span class="sd">±0.8</span></td><td class="avg">62.2 <span class="sd">±0.1</span></td></tr>
+            <tr class="ours"><th scope="row">ReFeri</th><td><b>83.1 <span class="sd">±0.2</span></b></td><td><u>62.0 <span class="sd">±0.6</span></u></td><td><u>44.6 <span class="sd">±2.6</span></u></td><td><b>78.2 <span class="sd">±0.4</span></b></td><td><b>79.1 <span class="sd">±0.5</span></b> / 84.7 <span class="sd">±0.8</span></td><td><b>35.7 <span class="sd">±0.4</span> / 47.4 <span class="sd">±0.6</span></b></td><td><b>64.9 <span class="sd">±0.4</span></b></td><td class="avg"><b>63.9 <span class="sd">±0.5</span></b></td></tr>
+            <tr class="ours"><th scope="row">ReFeri<sub>1B</sub></th><td><u>82.8 <span class="sd">±0.4</span></u></td><td><b>62.9 <span class="sd">±1.4</span></b></td><td><b>45.3 <span class="sd">±1.2</span></b></td><td><u>77.7 <span class="sd">±0.2</span></u></td><td>78.3 <span class="sd">±0.8</span> / 83.9 <span class="sd">±1.0</span></td><td><u>35.1 <span class="sd">±0.5</span></u> / 46.6 <span class="sd">±0.5</span></td><td><u>64.6 <span class="sd">±0.5</span></u></td><td class="avg"><u>63.8 <span class="sd">±0.2</span></u></td></tr>
+          </tbody>
+          <tbody>
+            <tr class="group"><th colspan="9" scope="rowgroup"><span>LLaMA-3.1-8B</span></th></tr>
+            <tr><th scope="row">Zero-shot CoT</th><td>43.3 <span class="sd">±1.5</span></td><td>51.9 <span class="sd">±1.2</span></td><td>20.9 <span class="sd">±0.7</span></td><td>42.9 <span class="sd">±1.3</span></td><td>59.7 <span class="sd">±0.7</span> / 65.9 <span class="sd">±0.5</span></td><td>15.7 <span class="sd">±0.6</span> / 21.7 <span class="sd">±0.5</span></td><td>40.1 <span class="sd">±0.4</span></td><td class="avg">39.2 <span class="sd">±0.2</span></td></tr>
+            <tr><th scope="row">Few-shot CoT</th><td>64.5 <span class="sd">±2.2</span></td><td>53.4 <span class="sd">±0.8</span></td><td>23.7 <span class="sd">±0.3</span></td><td>42.4 <span class="sd">±0.5</span></td><td>61.1 <span class="sd">±0.7</span> / 66.5 <span class="sd">±0.9</span></td><td>19.3 <span class="sd">±0.3</span> / 25.4 <span class="sd">±0.4</span></td><td>39.2 <span class="sd">±0.4</span></td><td class="avg">43.4 <span class="sd">±0.5</span></td></tr>
+            <tr><th scope="row">LEAP</th><td>64.7 <span class="sd">±3.9</span></td><td>53.3 <span class="sd">±5.1</span></td><td>26.8 <span class="sd">±1.8</span></td><td>41.9 <span class="sd">±0.5</span></td><td>57.0 <span class="sd">±1.1</span> / 62.6 <span class="sd">±1.3</span></td><td>19.9 <span class="sd">±0.2</span> / 26.7 <span class="sd">±0.1</span></td><td>36.5 <span class="sd">±0.7</span></td><td class="avg">42.9 <span class="sd">±1.2</span></td></tr>
+            <tr><th scope="row">USC</th><td>67.7 <span class="sd">±4.5</span></td><td>54.8 <span class="sd">±2.2</span></td><td>28.1 <span class="sd">±3.1</span></td><td>48.5 <span class="sd">±1.2</span></td><td>68.6 <span class="sd">±0.9</span> / 74.3 <span class="sd">±1.3</span></td><td><u>25.5 <span class="sd">±1.1</span></u> / <u>33.4 <span class="sd">±1.0</span></u></td><td><b>45.8 <span class="sd">±0.4</span></b></td><td class="avg">48.4 <span class="sd">±1.1</span></td></tr>
+            <tr><th scope="row">CoT-WP</th><td>71.9 <span class="sd">±0.6</span></td><td>53.1 <span class="sd">±1.4</span></td><td>30.5 <span class="sd">±2.5</span></td><td>48.1 <span class="sd">±1.7</span></td><td><b>71.0 <span class="sd">±0.5</span></b> / 75.1 <span class="sd">±0.6</span></td><td><b>25.7 <span class="sd">±0.1</span></b> / 33.2 <span class="sd">±0.4</span></td><td><u>45.4 <span class="sd">±0.7</span></u></td><td class="avg">49.4 <span class="sd">±0.4</span></td></tr>
+            <tr><th scope="row">Self-Certainty</th><td>72.4 <span class="sd">±3.6</span></td><td><u>55.9 <span class="sd">±0.6</span></u></td><td>30.8 <span class="sd">±2.6</span></td><td><b>50.7 <span class="sd">±2.2</span></b></td><td>70.8 <span class="sd">±1.1</span> / <u>76.2 <span class="sd">±1.0</span></u></td><td>25.2 <span class="sd">±0.5</span> / 32.9 <span class="sd">±1.0</span></td><td>44.5 <span class="sd">±0.8</span></td><td class="avg">50.0 <span class="sd">±1.1</span></td></tr>
+            <tr class="ours"><th scope="row">ReFeri</th><td><u>76.5 <span class="sd">±3.4</span></u></td><td><b>57.5 <span class="sd">±0.5</span></b></td><td><b>33.5 <span class="sd">±1.7</span></b></td><td><u>50.2 <span class="sd">±1.6</span></u></td><td><u>70.9 <span class="sd">±1.6</span></u> / <b>76.3 <span class="sd">±0.5</span></b></td><td><b>25.7 <span class="sd">±0.7</span> / 33.6 <span class="sd">±0.6</span></b></td><td>44.7 <span class="sd">±0.5</span></td><td class="avg"><b>51.3 <span class="sd">±0.6</span></b></td></tr>
+            <tr class="ours"><th scope="row">ReFeri<sub>1B</sub></th><td><b>76.9 <span class="sd">±3.2</span></b></td><td>55.5 <span class="sd">±0.8</span></td><td><u>31.8 <span class="sd">±2.0</span></u></td><td>50.1 <span class="sd">±1.7</span></td><td><u>70.9 <span class="sd">±1.4</span></u> / 75.8 <span class="sd">±1.0</span></td><td>25.3 <span class="sd">±0.5</span> / 32.9 <span class="sd">±0.6</span></td><td>44.2 <span class="sd">±0.5</span></td><td class="avg"><u>50.7 <span class="sd">±0.5</span></u></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-caption">
+        ReFeri uses a LLaMA-3.1-8B estimator; ReFeri<sub>1B</sub> uses LLaMA-3.2-1B.
+        <b>Bold</b>: best, <u>underlined</u>: second-best within each generation model.
+      </p>
     </div>
 
     <p class="paper-lead">
@@ -395,9 +576,27 @@
     </p>
 
     <div class="figure-block">
-      <a class="figure-link" href="assets/figure2.png" target="_blank">
-        <img class="figure" src="assets/figure2.png" loading="lazy" alt="Test-time scaling across MATH500, GPQA, and MuSR-ta">
-      </a>
+      <div class="subfigures">
+        <figure class="subfigure">
+          <a class="figure-link" href="assets/fig2-math500.webp" target="_blank">
+            <img class="figure" src="assets/fig2-math500.webp" width="800" height="600" loading="lazy" decoding="async" alt="Test-time scaling on MATH500">
+          </a>
+          <figcaption>(a) MATH500</figcaption>
+        </figure>
+        <figure class="subfigure">
+          <a class="figure-link" href="assets/fig2-gpqa.webp" target="_blank">
+            <img class="figure" src="assets/fig2-gpqa.webp" width="800" height="600" loading="lazy" decoding="async" alt="Test-time scaling on GPQA">
+          </a>
+          <figcaption>(b) GPQA</figcaption>
+        </figure>
+        <figure class="subfigure">
+          <a class="figure-link" href="assets/fig2-musr-ta.webp" target="_blank">
+            <img class="figure" src="assets/fig2-musr-ta.webp" width="800" height="600" loading="lazy" decoding="async" alt="Test-time scaling on MuSR-ta">
+          </a>
+          <figcaption>(c) MuSR-ta</figcaption>
+        </figure>
+      </div>
+      <p class="figure-caption">GPT-4o-mini generates N = 1–20 candidates with Few-shot CoT; each method selects one.</p>
     </div>
   </section>
 
@@ -405,30 +604,79 @@
     <h2>Analysis</h2>
     <hr>
 
-    <div class="analysis-grid">
-      <div class="analysis-item">
-        <p class="paper-lead">
-          <strong>The backward term captures demonstration-specific dependence.</strong>
-          Candidates with larger raw backward scores reconstruct the original few-shot answers more accurately,
-          showing that the backward term provides a signal distinct from ordinary forward confidence.
-        </p>
-        <a class="figure-link" href="assets/figure3.png" target="_blank">
-          <img class="figure" src="assets/figure3.png" loading="lazy" alt="What the backward term captures">
+    <p class="paper-lead">
+      <strong>The backward term captures demonstration mimicry.</strong>
+      Ranking candidates by the raw backward term and reusing each as a one-shot demonstration,
+      accuracy decreases with rank: candidates with larger backward terms better reconstruct the
+      original few-shot answers, which is exactly the behavior ReFeri penalizes.
+    </p>
+    <div class="subfigures two">
+      <figure class="subfigure">
+        <a class="figure-link" href="assets/fig3-math500.webp" target="_blank">
+          <img class="figure" src="assets/fig3-math500.webp" width="1000" height="747" loading="lazy" decoding="async" alt="Accuracy by backward-term rank on MATH500">
         </a>
-      </div>
-
-      <div class="analysis-item">
-        <p class="paper-lead">
-          <strong>Perturbing candidates with demonstration fragments exposes the same behavior.</strong>
-          Forward selection drops from <b>45.3% to 33.3%</b> under artifact injection, while
-          ReFeri reaches <b>47.5%</b>, indicating that the backward correction suppresses misleading
-          demonstration similarity.
-        </p>
-        <a class="figure-link" href="assets/figure4.png" target="_blank">
-          <img class="figure" src="assets/figure4.png" loading="lazy" alt="Perturbation with demonstration fragments">
+        <figcaption>(a) MATH500</figcaption>
+      </figure>
+      <figure class="subfigure">
+        <a class="figure-link" href="assets/fig3-musr-ta.webp" target="_blank">
+          <img class="figure" src="assets/fig3-musr-ta.webp" width="1000" height="747" loading="lazy" decoding="async" alt="Accuracy by backward-term rank on MuSR-ta">
         </a>
-      </div>
+        <figcaption>(b) MuSR-ta</figcaption>
+      </figure>
     </div>
+
+    <p class="paper-lead">
+      <strong>Demonstration fragments inflate the backward term.</strong>
+      Prepending the first &rho;% of the few-shot examples to each candidate raises the raw backward
+      term (solid) much more sharply than the forward score (dashed).
+    </p>
+    <div class="subfigures two">
+      <figure class="subfigure">
+        <a class="figure-link" href="assets/fig4-math500.webp" target="_blank">
+          <img class="figure" src="assets/fig4-math500.webp" width="1000" height="751" loading="lazy" decoding="async" alt="Raw forward and backward scores under perturbation on MATH500">
+        </a>
+        <figcaption>(a) MATH500</figcaption>
+      </figure>
+      <figure class="subfigure">
+        <a class="figure-link" href="assets/fig4-musr-ta.webp" target="_blank">
+          <img class="figure" src="assets/fig4-musr-ta.webp" width="1000" height="753" loading="lazy" decoding="async" alt="Raw forward and backward scores under perturbation on MuSR-ta">
+        </a>
+        <figcaption>(b) MuSR-ta</figcaption>
+      </figure>
+    </div>
+
+    <p class="paper-lead">
+      <strong>This penalty keeps selection robust to injected artifacts.</strong>
+      When demonstration fragments are prepended to a low-forward incorrect candidate, forward-only selection
+      drops from <b>45.3% to 33.3%</b>, while ReFeri reaches <b>47.5%</b>.
+    </p>
+
+    <div class="table-wrap narrow">
+      <table class="results">
+        <thead>
+          <tr>
+            <th scope="col">Method</th>
+            <th scope="col">&rho; = 0</th>
+            <th scope="col">&rho; = 50</th>
+            <th scope="col">&rho; = 100</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group"><th colspan="4" scope="rowgroup"><span>LLaMA-3.1-8B estimator</span></th></tr>
+          <tr><th scope="row">Forward</th><td>45.29</td><td>42.03</td><td>33.31</td></tr>
+          <tr class="ours"><th scope="row">ReFeri</th><td>45.29</td><td><b>47.48</b></td><td><b>47.48</b></td></tr>
+        </tbody>
+        <tbody>
+          <tr class="group"><th colspan="4" scope="rowgroup"><span>LLaMA-3.2-1B estimator</span></th></tr>
+          <tr><th scope="row">Forward</th><td>45.41</td><td>41.38</td><td>30.71</td></tr>
+          <tr class="ours"><th scope="row">ReFeri</th><td>45.47</td><td><b>47.60</b></td><td><b>47.66</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="figure-caption">
+      Selection accuracy (%) when the first &rho;% of the retrieved demonstration answer is prepended to a
+      low-forward incorrect candidate (GPT-4o, GPT-4o-mini, and LLaMA-3.1-8B generators; MATH500, GPQA, MuSR-ta).
+    </p>
   </section>
 
   <section id="robustness-efficiency">
@@ -442,8 +690,8 @@
           Holding candidate pools fixed, ReFeri improves over Few-shot CoT with every tested estimator,
           from LLaMA-3.2-1B-Instruct to LLaMA-3.1-70B-Instruct.
         </p>
-        <a class="figure-link" href="assets/figure5.png" target="_blank">
-          <img class="figure" src="assets/figure5.png" loading="lazy" alt="Performance across estimation models">
+        <a class="figure-link" href="assets/fig5-estimators.webp" target="_blank">
+          <img class="figure" src="assets/fig5-estimators.webp" width="1200" height="481" loading="lazy" decoding="async" alt="Average accuracy of ReFeri with different estimation models versus Few-shot CoT">
         </a>
       </div>
 
@@ -453,8 +701,8 @@
           ReFeri with a 1B estimator remains on a strong trade-off frontier and runs approximately
           <b>2.6× faster</b> than CoT-WP with an 8B estimator.
         </p>
-        <a class="figure-link" href="assets/figure6.png" target="_blank">
-          <img class="figure" src="assets/figure6.png" loading="lazy" alt="Cost-accuracy trade-off">
+        <a class="figure-link" href="assets/fig6-cost.webp" target="_blank">
+          <img class="figure" src="assets/fig6-cost.webp" width="1200" height="594" loading="lazy" decoding="async" alt="Cost-accuracy trade-off of response selection methods">
         </a>
       </div>
     </div>
@@ -472,7 +720,7 @@
   </section>
 
   <footer>
-    ReFeri project page · Figure and table assets are reproduced from the paper.
+    ReFeri project page · Figures and tables are reproduced from the paper.
   </footer>
 </body>
 </html>
