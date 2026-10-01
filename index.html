@@ -294,8 +294,10 @@
 
     .subfigure .figure { margin-top: 0; }
 
+    /* --axis-l / --axis-r: the plot area's left/right offset within the image, so captions center under the plot, not the y-axis label. */
     .subfigure figcaption {
       margin-top: 2px;
+      padding: 0 var(--axis-r, 0) 0 var(--axis-l, 0);
       color: var(--muted);
       font-size: 15px;
       font-weight: 400;
@@ -591,7 +593,7 @@
     </p>
 
     <div class="figure-block">
-      <div class="subfigures">
+      <div class="subfigures" style="--axis-l: 14%; --axis-r: 1.8%;">
         <figure class="subfigure">
           <a class="figure-link" href="assets/fig2-math500.webp" target="_blank">
             <img class="figure" src="assets/fig2-math500.webp" width="800" height="600" loading="lazy" decoding="async" alt="Test-time scaling on MATH500">
@@ -625,7 +627,7 @@
       accuracy decreases with rank: candidates with larger backward terms better reconstruct the
       original few-shot answers, which is exactly the behavior ReFeri penalizes.
     </p>
-    <div class="subfigures two">
+    <div class="subfigures two" style="--axis-l: 14.2%; --axis-r: 1.1%;">
       <figure class="subfigure">
         <a class="figure-link" href="assets/fig3-math500.webp" target="_blank">
           <img class="figure" src="assets/fig3-math500.webp" width="1000" height="747" loading="lazy" decoding="async" alt="Accuracy by backward-term rank on MATH500">
@@ -646,13 +648,13 @@
       term (solid) much more sharply than the forward score (dashed).
     </p>
     <div class="subfigures two">
-      <figure class="subfigure">
+      <figure class="subfigure" style="--axis-l: 18.3%; --axis-r: 4.5%;">
         <a class="figure-link" href="assets/fig4-math500.webp" target="_blank">
           <img class="figure" src="assets/fig4-math500.webp" width="1000" height="751" loading="lazy" decoding="async" alt="Raw forward and backward scores under perturbation on MATH500">
         </a>
         <figcaption>(a) MATH500</figcaption>
       </figure>
-      <figure class="subfigure">
+      <figure class="subfigure" style="--axis-l: 14.8%; --axis-r: 4.1%;">
         <a class="figure-link" href="assets/fig4-musr-ta.webp" target="_blank">
           <img class="figure" src="assets/fig4-musr-ta.webp" width="1000" height="753" loading="lazy" decoding="async" alt="Raw forward and backward scores under perturbation on MuSR-ta">
         </a>
@@ -702,8 +704,8 @@
       <div class="analysis-item">
         <p class="paper-lead">
           <strong>ReFeri remains effective across estimation models.</strong>
-          Holding candidate pools fixed, ReFeri improves over Few-shot CoT with every tested estimator,
-          from LLaMA-3.2-1B-Instruct to LLaMA-3.1-70B-Instruct.
+          Holding candidate pools fixed, ReFeri improves over Few-shot CoT with every tested estimator
+          across model families and scales: LLaMA-3.2-1B, Qwen2.5-7B, LLaMA-3.1-8B, and LLaMA-3.1-70B.
         </p>
         <a class="figure-link" href="assets/fig5-estimators.webp" target="_blank">
           <img class="figure" src="assets/fig5-estimators.webp" width="1200" height="481" loading="lazy" decoding="async" alt="Average accuracy of ReFeri with different estimation models versus Few-shot CoT">
