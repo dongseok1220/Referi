@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ReFeri: Training-free LLM Verification via Recycling Few-shot Examples">
+  <meta name="author" content="Dongseok Lee, Jimyung Hong, Dongyoung Kim, Jaehyung Kim">
+  <meta property="og:title" content="ReFeri: Training-free LLM Verification via Recycling Few-shot Examples">
+  <meta property="og:description" content="A training-free LLM verifier that recycles few-shot examples for response selection.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/figure1.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>ReFeri — Training-free LLM Verification</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+  <style>
+    :root {
+      --accent: #1d6f5f;
+      --accent-dark: #145346;
+      --ink: #25282b;
+      --muted: #656a70;
+      --line: #dedede;
+      --soft: #f4f7f6;
+      --max-width: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 0 18px 42px;
+      color: var(--ink);
+      background: #fff;
+      font-family: "Titillium Web", "Helvetica Neue", Arial, sans-serif;
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.46;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--accent-dark);
+      text-decoration: underline;
+    }
+
+    h1, h2, h3 { color: var(--ink); }
+
+    h1 {
+      max-width: 940px;
+      margin: 44px auto 10px;
+      text-align: center;
+      font-size: clamp(34px, 5vw, 46px);
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+    }
+
+    h2 {
+      margin: 12px 0 5px;
+      font-size: 30px;
+      font-weight: 400;
+    }
+
+    h3 {
+      margin: 26px 0 7px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    p { margin: 10px 0; }
+
+    section {
+      clear: both;
+      margin: 42px 0;
+    }
+
+    hr {
+      height: 1px;
+      margin: 0 0 18px;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .method-name {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .authors {
+      margin-top: 23px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .authors a,
+    .authors span {
+      display: inline-block;
+      margin: 0 4px;
+    }
+
+    .authors sup,
+    .affiliations sup {
+      font-size: 11px;
+    }
+
+    .affiliations {
+      margin-top: 7px;
+      text-align: center;
+      color: #45494d;
+      font-size: 17px;
+    }
+
+    .brand-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin: 15px 0 4px;
+    }
+
+    .brand-logos a {
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+    }
+
+    .brand-logos a:hover {
+      text-decoration: none;
+    }
+
+    .yonsei-mark {
+      width: 62px;
+      height: 62px;
+      object-fit: contain;
+    }
+
+    .ml3-mark {
+      width: 150px;
+      max-height: 58px;
+      object-fit: contain;
+    }
+
+    .venue {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 23px;
+      font-weight: 600;
+    }
+
+    .secondary-venue {
+      margin-top: 1px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .paper-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 28px;
+      margin: 22px 0 30px;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .paper-actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+      transition: color .16s ease, transform .16s ease;
+    }
+
+    .paper-actions a:hover {
+      color: var(--accent);
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+
+    .figure-link {
+      display: block;
+      color: inherit;
+    }
+
+    .figure-link:hover { text-decoration: none; }
+
+    .figure {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 16px auto 0;
+    }
+
+    .figure.narrow {
+      width: min(100%, 760px);
+    }
+
+    .caption {
+      max-width: 900px;
+      margin: 8px auto 0;
+      color: #666;
+      font-size: 15px;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .caption strong {
+      color: #4b4f53;
+      font-weight: 600;
+    }
+
+    .news-row { margin: 7px 0; }
+    .news-row i { width: 22px; color: var(--accent); }
+
+    blockquote {
+      margin: 18px 0;
+      padding: 13px 18px;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: var(--soft);
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .key-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 22px 0 10px;
+    }
+
+    .key-point {
+      padding: 16px 17px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .key-point strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .key-point span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .result-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 20px 0 25px;
+    }
+
+    .result-card {
+      padding: 15px 12px;
+      border-radius: 9px;
+      background: var(--soft);
+      text-align: center;
+    }
+
+    .result-card .number {
+      display: block;
+      color: var(--accent);
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .result-card .label {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: start;
+      margin-top: 19px;
+    }
+
+    .analysis-item {
+      min-width: 0;
+    }
+
+    .analysis-item .figure {
+      margin-top: 0;
+    }
+
+    .takeaway-list {
+      margin: 11px 0 0;
+      padding-left: 22px;
+    }
+
+    .takeaway-list li { margin: 7px 0; }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    pre {
+      margin: 8px 0 0;
+      padding: 16px;
+      overflow-x: auto;
+      border-radius: 4px;
+      background: #ededed;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    footer {
+      margin-top: 46px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: #777;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 0 14px 32px; }
+      h1 { margin-top: 30px; }
+      .authors { font-size: 17px; }
+      .paper-actions { gap: 18px; font-size: 18px; }
+      .key-points,
+      .result-strip,
+      .analysis-grid { grid-template-columns: 1fr; }
+      .analysis-grid { gap: 30px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>
+      <span class="method-name">ReFeri</span>:
+      Training-free LLM Verification via Recycling Few-shot Examples
+    </h1>
+
+    <div class="authors">
+      <a href="https://dongseok1220.github.io/" target="_blank" rel="noreferrer"><b>Dongseok Lee</b><sup>1</sup></a>,
+      <span>Jimyung Hong<sup>1</sup></span>,
+      <a href="https://kingdy2002.github.io/" target="_blank" rel="noreferrer">Dongyoung Kim<sup>2</sup></a>,
+      <a href="https://sites.google.com/view/jaehyungkim" target="_blank" rel="noreferrer">Jaehyung Kim<sup>1</sup></a>
+    </div>
+
+    <div class="affiliations">
+      <span><sup>1</sup>Yonsei University</span>
+      &nbsp;&nbsp;&nbsp;
+      <span><sup>2</sup>KAIST</span>
+    </div>
+
+    <div class="brand-logos" aria-label="Affiliation logos">
+      <a href="https://www.yonsei.ac.kr/" target="_blank" rel="noreferrer" aria-label="Yonsei University">
+        <img class="yonsei-mark" src="assets/yonsei_symbol.png" alt="Yonsei University">
+      </a>
+      <a href="https://ml3.yonsei.ac.kr/" target="_blank" rel="noreferrer" aria-label="Machine and Language Learning Lab">
+        <img class="ml3-mark" src="assets/ml3_logo_final.png" alt="Machine and Language Learning Lab (ML3)">
+      </a>
+    </div>
+
+    <div class="venue">EMNLP 2026 <span style="font-weight:400;">(Main)</span></div>
+    <div class="secondary-venue">ICML 2025 Workshop ES-FoMo-III · Spotlight Presentation (14/146)</div>
+
+    <div class="paper-actions">
+      <a href="https://arxiv.org/abs/2506.17251v3" target="_blank" rel="noreferrer">
+        <i class="fa-solid fa-file-lines"></i> Paper
+      </a>
+      <a href="https://github.com/dongseok1220/Referi" target="_blank" rel="noreferrer">
+        <i class="fa-brands fa-github"></i> Code
+      </a>
+      <a href="#citation">
+        <i class="fa-solid fa-quote-right"></i> Citation
+      </a>
+    </div>
+
+    <a class="figure-link" href="assets/figure1.png" target="_blank">
+      <img class="figure" src="assets/figure1.png" alt="Figure 1: Overview of ReFeri">
+    </a>
+    <div class="caption">
+      <strong>Figure 1.</strong>
+      ReFeri evaluates each candidate using a forward confidence score and a backward reconstruction penalty.
+      The forward term rewards following the demonstrations, while the backward term penalizes
+      demonstration-specific artifacts that can mislead likelihood-based selection.
+    </div>
+  </header>
+
+  <section id="news">
+    <h2>News</h2>
+    <hr>
+    <div class="news-row"><i class="fa-regular fa-calendar"></i> <b>[2026]</b> Accepted to EMNLP 2026 Main.</div>
+    <div class="news-row"><i class="fa-regular fa-calendar"></i> <b>[2025]</b> Spotlight at ICML 2025 Workshop ES-FoMo-III.</div>
+  </section>
+
+  <section id="overview">
+    <h2>Overview</h2>
+    <hr>
+
+    <p>
+      LLMs can generate multiple plausible reasoning paths for the same query, making reliable response selection
+      an important part of test-time scaling. Majority voting is limited to answers that can be normalized and
+      aggregated, while learned verifiers require additional labeled data and training.
+    </p>
+
+    <blockquote>
+      <b>ReFeri recycles the few-shot examples already available in the prompt as a training-free verifier.</b>
+      The same demonstrations used to guide generation are reused to evaluate which candidate best follows
+      the intended task while avoiding demonstration-specific shortcuts.
+    </blockquote>
+
+    <p>
+      ReFeri is motivated by a Bayes-inspired decomposition of candidate likelihood into two complementary terms.
+      A <i>forward confidence</i> score measures how well a candidate follows the given few-shot guidance.
+      A <i>backward reconstruction penalty</i> measures how strongly the candidate helps reconstruct the
+      demonstrations, which can expose excessive dependence on demonstration-specific patterns.
+    </p>
+
+    <div class="key-points">
+      <div class="key-point">
+        <strong>Training-free</strong>
+        <span>No task-specific reward model or verifier training is required.</span>
+      </div>
+      <div class="key-point">
+        <strong>Few-shot recycling</strong>
+        <span>Demonstrations are used twice: first for generation, then again for verification.</span>
+      </div>
+      <div class="key-point">
+        <strong>Test-time scaling</strong>
+        <span>The selector remains effective as the candidate pool grows.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="main-results">
+    <h2>Main Results</h2>
+    <hr>
+
+    <p>
+      Across three generation LLMs and seven reasoning benchmarks, ReFeri consistently improves training-free
+      response selection. Relative to Few-shot CoT with random candidate selection, the paper reports an
+      <b>8.2% average relative gain</b>; compared with the strongest prior training-free baseline,
+      the average relative improvement is <b>2.6%</b>.
+    </p>
+
+    <div class="result-strip">
+      <div class="result-card">
+        <span class="number">3</span>
+        <span class="label">generation LLMs</span>
+      </div>
+      <div class="result-card">
+        <span class="number">7</span>
+        <span class="label">reasoning benchmarks</span>
+      </div>
+      <div class="result-card">
+        <span class="number">8.2%</span>
+        <span class="label">avg. relative gain over random selection</span>
+      </div>
+    </div>
+
+    <a class="figure-link" href="assets/table1.png" target="_blank">
+      <img class="figure" src="assets/table1.png" loading="lazy" alt="Table 1: Main results">
+    </a>
+
+    <p class="small-note">
+      Click the table to open the full-resolution version. ReFeri also remains competitive with a
+      lightweight 1B likelihood estimator, indicating that the gains do not simply come from estimator capacity.
+    </p>
+  </section>
+
+  <section id="scaling">
+    <h2>Test-time Scaling</h2>
+    <hr>
+
+    <p>
+      ReFeri scales reliably as the number of candidate responses increases.
+      With GPT-4o-mini generation, accuracy increases from <b>75.8 → 79.4</b> on MATH500,
+      <b>41.4 → 45.5</b> on GPQA, and <b>75.6 → 86.0</b> on MuSR-ta when increasing the candidate
+      pool from one to twenty responses.
+    </p>
+
+    <a class="figure-link" href="assets/figure2.png" target="_blank">
+      <img class="figure" src="assets/figure2.png" loading="lazy" alt="Figure 2: Test-time scaling">
+    </a>
+    <div class="caption">
+      <strong>Figure 2.</strong>
+      Accuracy as the candidate pool grows. ReFeri continues to select higher-quality responses,
+      while several other training-free selectors saturate or degrade.
+    </div>
+  </section>
+
+  <section id="analysis">
+    <h2>What Does the Backward Term Capture?</h2>
+    <hr>
+
+    <p>
+      The backward term is not intended as a standalone correctness measure. Instead, it is interpreted jointly
+      with the forward score. The analyses below show that a large backward term is particularly sensitive to
+      candidates that reconstruct or mimic demonstration-specific structure.
+    </p>
+
+    <div class="analysis-grid">
+      <div class="analysis-item">
+        <a class="figure-link" href="assets/figure3.png" target="_blank">
+          <img class="figure" src="assets/figure3.png" loading="lazy" alt="Figure 3: What the backward term captures">
+        </a>
+        <div class="caption">
+          <strong>Figure 3.</strong>
+          Candidates with larger raw backward terms are better at reconstructing the original few-shot answers,
+          consistent with the demonstration-dependence that ReFeri is designed to suppress.
+        </div>
+      </div>
+
+      <div class="analysis-item">
+        <a class="figure-link" href="assets/figure4.png" target="_blank">
+          <img class="figure" src="assets/figure4.png" loading="lazy" alt="Figure 4: Perturbation with demonstration fragments">
+        </a>
+        <div class="caption">
+          <strong>Figure 4.</strong>
+          Prepending demonstration fragments increases the backward term much more sharply than the forward score,
+          directly testing its sensitivity to demonstration artifacts.
+        </div>
+      </div>
+    </div>
+
+    <ul class="takeaway-list">
+      <li>The backward term provides a signal that is complementary to ordinary forward likelihood.</li>
+      <li>Subtracting it helps avoid selecting candidates that receive high scores by copying demonstration-specific structure.</li>
+      <li>The effect is asymmetric: the penalty is most useful when the incorrect candidate is more demonstration-similar.</li>
+    </ul>
+  </section>
+
+  <section id="citation">
+    <h2>Citation</h2>
+    <hr>
+    <pre><code>@article{lee2025training,
+  title={Training-free LLM Verification via Recycling Few-shot Examples},
+  author={Lee, Dongseok and Hong, Jimyung and Kim, Dongyoung and Kim, Jaehyung},
+  journal={arXiv preprint arXiv:2506.17251},
+  year={2025}
+}</code></pre>
+  </section>
+
+  <footer>
+    ReFeri project page · Figure and table assets are reproduced from the paper.
+  </footer>
+</body>
+</html>
