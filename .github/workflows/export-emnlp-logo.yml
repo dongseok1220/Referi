@@ -1,0 +1,25 @@
+name: Export EMNLP 2026 poster logo
+on:
+  push:
+    paths: [".github/workflows/export-emnlp-logo.yml"]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official logo
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p poster-logos
+          curl --fail --location --retry 3 -o poster-logos/emnlp_2026_logo_v1.png "https://2026.emnlp.org/assets/images/logos/emnlp_2026_logo_v1.png"
+          cp assets/yonsei_symbol.png poster-logos/yonsei_symbol.png
+          file poster-logos/*
+      - name: Upload for poster design
+        uses: actions/upload-artifact@v4
+        with:
+          name: referi-poster-logos
+          path: poster-logos
+          if-no-files-found: error
